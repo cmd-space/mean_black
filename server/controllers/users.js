@@ -1,10 +1,10 @@
 var mongoose = require('mongoose');
-var Something = mongoose.model('Something');
+var User = mongoose.model('User');
 
 module.exports = (function(){
     return{
         show: function(req, res){
-            Something.find({}, function(err, results){
+            User.find({}, function(err, results){
                 if(err){
                     console.log(err);
                 } else{
@@ -13,12 +13,12 @@ module.exports = (function(){
             });
         },
         add: function(req, res){
-            var newSomething = new Something({name: req.body.name});
-            newSomething.save(function(err, results){
+            var newUser = new User({name: req.body.name});
+            newUser.save(function(err, results){
                 if(err){
                     console.log(err);
                 } else{
-                    Something.find({}, function(err, results){
+                    User.find({_id: results._id}, function(err, results){
                         if(err){
                             console.log(err);
                         } else{

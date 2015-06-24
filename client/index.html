@@ -2,7 +2,7 @@
 <html lang="en" ng-app="new_app">
 <head>
     <meta charset="UTF-8">
-    <title>Something</title>
+    <title>Dashboard</title>
     <link rel="stylesheet" href="/stylesheets/style.css">
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.5/angular.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.5/angular-route.min.js"></script>
@@ -11,31 +11,37 @@
         //setting up routing
             new_app.config(function($routeProvider){
                 $routeProvider
-                    .when('/something', {
-                        templateUrl: 'partials/something.html'
+                    .when('/index', {
+                        templateUrl: 'partials/index.html'
                     })
                     .when('/', {
-                        templateUrl: 'partials/something.html'
+                        templateUrl: 'partials/index.html'
+                    })
+                    .when('/dashboard', {
+                        templateUrl: 'partials/dashboard.html'
+                    })
+                    .when('/user/:id', {
+                        templateUrl: 'partials/user.html'
                     })
                     .otherwise({
                         redirectTo: '/'
                     });
             });
         
-        new_app.factory('SomethingFactory', function($http){
+        new_app.factory('UserFactory', function($http){
         	var factory = {};
         	// init another array or object here
-            var something = [];
+            var users = [];
 
-        	factory.getSomething = function(callback){
-        		$http.get('/something').success(function(output){
-        			something = output;
-        			callback(something);
+        	factory.getUsers = function(callback){
+        		$http.get('/users').success(function(output){
+        			users = output;
+        			callback(users);
         		});
         	}
 
-            factory.addSomething = function(something, callback){
-                $http.post('/something_try', something).success(function(data){
+            factory.addUser = function(user, callback){
+                $http.post('/new_user', user).success(function(data){
                     callback(data);
                 });
             }
@@ -43,19 +49,21 @@
         	return factory;
     	});
 
-    	new_app.controller('NewController', function($scope, SomethingFactory, $rootScope){
+    	new_app.controller('UserController', function($scope, UserFactory, $rootScope, $location){
     		
-            SomethingFactory.getSomething(function(data){
-    			$scope.somethings = data;
+            UserFactory.getUsers(function(data){
+    			$scope.users = data;
     		});
 
-            $scope.testing = function(){
+            $scope.addUser = function(){
                 console.log('getting to function');
-                console.log($scope.new_something);
-                SomethingFactory.addSomething($scope.new_something, function(res){
-                    console.log('getting to controller');
-                    $scope.somethings = res;
-                })
+                console.log($scope.new_user);
+                UserFactory.addUser($scope.new_user, function(res){
+                    // console.log('getting to controller');
+                    $rootScope.user = res;
+                    $location.url('/dashboard');
+                    console.log('should be just one user',$rootScope.user);
+                });
             }
     	});
     </script>

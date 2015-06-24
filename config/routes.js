@@ -1,11 +1,11 @@
-var something = require('./../server/controllers/somethings.js');
+var user = require('./../server/controllers/users.js');
 // add another var here if more than one controller
 module.exports = function(app){
-    app.get('/something', function(req, res){
-        something.show(req, res); 
+    app.get('/users', function(req, res){
+        user.show(req, res); 
     });
     // app.post
-    app.post('/something_try', function(req, res){
-    	something.add(req, res);
+    app.post('/new_user', function(req, res){
+    	user.add(req, res);
     });
 }

@@ -1,0 +1,19 @@
+<div ng-controller="UserController">
+	<ul id="links">
+		<li>Bucket List</li>
+		<li><a href="#/dashboard">Home</a></li>
+		<li><a href="#/index">Logout</a></li>
+	</ul>
+	<h2 class="h2Inline">Welcome,</h2>
+	<h2 class="h2Inline" ng-bind="user.name"></h2>
+	<form ng-submit="newNote">
+		<input type="text" ng-model="new_note.title">
+		<input type="text" ng-model="new_note.desc">
+		<select>
+			<option value="Oliver">Oliver</option>
+			<option value="KB">KB</option>
+			<option value="Rozen">Rozen</option>
+		</select>
+		<input type="submit" value="Add to List">
+	</form>
+</div>
