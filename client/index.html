@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="new_app">
+<head>
+    <meta charset="UTF-8">
+    <title>Something</title>
+    <link rel="stylesheet" href="/stylesheets/style.css">
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.5/angular.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.5/angular-route.min.js"></script>
+    <script>
+        var new_app = angular.module('new_app', ['ngRoute']);
+        //setting up routing
+            new_app.config(function($routeProvider){
+                $routeProvider
+                    .when('/something', {
+                        templateUrl: 'partials/something.html'
+                    })
+                    .when('/', {
+                        templateUrl: 'partials/something.html'
+                    })
+                    .otherwise({
+                        redirectTo: '/'
+                    });
+            });
+        
+        new_app.factory('SomethingFactory', function($http){
+        	var factory = {};
+        	// init another array or object here
+            var something = [];
+
+        	factory.getSomething = function(callback){
+        		$http.get('/something').success(function(output){
+        			something = output;
+        			callback(something);
+        		});
+        	}
+
+            factory.addSomething = function(something, callback){
+                $http.post('/something_try', something).success(function(data){
+                    callback(data);
+                });
+            }
+
+        	return factory;
+    	});
+
+    	new_app.controller('NewController', function($scope, SomethingFactory, $rootScope){
+    		
+            SomethingFactory.getSomething(function(data){
+    			$scope.somethings = data;
+    		});
+
+            $scope.testing = function(){
+                console.log('getting to function');
+                console.log($scope.new_something);
+                SomethingFactory.addSomething($scope.new_something, function(res){
+                    console.log('getting to controller');
+                    $scope.somethings = res;
+                })
+            }
+    	});
+    </script>
+</head>
+<body>
+	<div id="mainDiv" ng-view=""></div>
+</body>
+</html>
