@@ -6,14 +6,22 @@
 	</ul>
 	<h2 class="h2Inline">Welcome,</h2>
 	<h2 class="h2Inline" ng-bind="user.name"></h2>
-	<form ng-submit="newNote">
-		<input type="text" ng-model="new_note.title">
-		<input type="text" ng-model="new_note.desc">
-		<select>
-			<option value="Oliver">Oliver</option>
-			<option value="KB">KB</option>
-			<option value="Rozen">Rozen</option>
-		</select>
-		<input type="submit" value="Add to List">
-	</form>
+	<div ng-controller="ListController">
+		<form ng-submit="newNote()">
+			<input type="text" ng-model="new_note.title" placeholder="Title">
+			<input type="text" ng-model="new_note.desc" placeholder="Description">
+			<select ng-model="new_note.tagged">
+				<option value="Oliver">Oliver</option>
+				<option value="KB">KB</option>
+				<option value="Rozen">Rozen</option>
+			</select>
+			<input type="submit" value="Add to List">
+		</form>
+		<div>
+			<p>Before I die I want to..</p>
+			<ul ng-repeat="bucket in list">
+				<li><input type="checkbox"><p class="inline" ng-bind="bucket"></p></li>
+			</ul>
+		</div>
+	</div>
 </div>

@@ -49,6 +49,25 @@
         	return factory;
     	});
 
+        new_app.factory('ListFactory', function($http){
+            var factory = {};
+            var lists = [];
+
+            factory.getUserList = function(id, callback){
+                $http.get('/user_list', id).success(function(data){
+                    callback(data);
+                });
+            }
+
+            factory.addUserBucket = function(bucket, callback){
+                $http.post('/new_bucket', bucket).success(function(data){
+                    callback(data);
+                });
+            }
+
+            return factory;
+        });
+
     	new_app.controller('UserController', function($scope, UserFactory, $rootScope, $location){
     		
             UserFactory.getUsers(function(data){
@@ -56,8 +75,8 @@
     		});
 
             $scope.addUser = function(){
-                console.log('getting to function');
-                console.log($scope.new_user);
+                // console.log('getting to function');
+                // console.log($scope.new_user);
                 UserFactory.addUser($scope.new_user, function(res){
                     // console.log('getting to controller');
                     $rootScope.user = res;
@@ -66,6 +85,22 @@
                 });
             }
     	});
+
+        new_app.controller('ListController', function($scope, ListFactory, $rootScope){
+            $scope.list = {};
+            ListFactory.getUserList($rootScope.user, function(data){
+                $scope.list = data;
+            });
+
+            $scope.newNote = function(){
+                $scope.newer_note = {title: $scope.new_note.title, description: $scope.new_note.desc, tagged: $scope.new_note.tagged, user: $rootScope.user.name, user_id: $rootScope.user._id};
+                console.log($scope.newer_note);
+                ListFactory.addUserBucket($scope.newer_note, function(res){
+                    $scope.userBuckets = res;
+                    console.log('just added a new bucket', res);
+                });
+            }
+        });
     </script>
 </head>
 <body>
