@@ -27,6 +27,15 @@ module.exports = (function(){
                     });
                 }
             });
+        },
+        findOne: function(req, res){
+            User.find({_id: req.body.id}, function(err, result){
+                if(err){
+                    console.log(err);
+                } else{
+                    res.json(result);
+                }
+            })
         }
     }
 })();

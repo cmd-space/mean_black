@@ -12,4 +12,10 @@ module.exports = function(app){
     app.post('/new_bucket', function(req, res){
     	bucket.add(req, res);
     });
+    app.get('/user_buckets', function(req, res){
+    	bucket.show(req, res);
+    });
+    app.post('/single_user', function(req, res){
+    	user.findOne(req, res);
+    });
 }

@@ -1,0 +1,13 @@
+ul{
+	list-style: none;
+}
+#links li{
+	display: inline-block;
+}
+.inline{
+	margin-left: .5em;
+	display: inline-block;
+}
+.none{
+	display: none;
+}

@@ -32,6 +32,7 @@
         	var factory = {};
         	// init another array or object here
             var users = [];
+            var user = {};
 
         	factory.getUsers = function(callback){
         		$http.get('/users').success(function(output){
@@ -40,8 +41,20 @@
         		});
         	}
 
+            var single = {};
+            factory.getOneUser = function(id, callback){
+                console.log('this is an id', id);
+                $http.post('/single_user', id).success(function(data){
+                    single = data;
+                    callback(data);
+                    // console.log('/user/whatever',single);
+                });
+            }
+
             factory.addUser = function(user, callback){
                 $http.post('/new_user', user).success(function(data){
+                    user = data;
+                    console.log('user info:',user);
                     callback(data);
                 });
             }
@@ -54,7 +67,7 @@
             var lists = [];
 
             factory.getUserList = function(id, callback){
-                $http.get('/user_list', id).success(function(data){
+                $http.get('/user_buckets', id).success(function(data){
                     callback(data);
                 });
             }
@@ -68,42 +81,65 @@
             return factory;
         });
 
-    	new_app.controller('UserController', function($scope, UserFactory, $rootScope, $location){
+    	new_app.controller('UserController', function($scope, UserFactory, $rootScope, $location, $routeParams){
     		
             UserFactory.getUsers(function(data){
     			$scope.users = data;
     		});
-
+            $scope.new_user = {};
             $scope.addUser = function(){
                 // console.log('getting to function');
-                // console.log($scope.new_user);
+                // console.log('user name is:',$scope.new_user);
                 UserFactory.addUser($scope.new_user, function(res){
                     // console.log('getting to controller');
-                    $rootScope.user = res;
+                    $rootScope.root = res;
                     $location.url('/dashboard');
-                    console.log('should be just one user',$rootScope.user);
+                    console.log('just one',$rootScope.root);
                 });
             }
     	});
 
-        new_app.controller('ListController', function($scope, ListFactory, $rootScope){
-            $scope.list = {};
-            ListFactory.getUserList($rootScope.user, function(data){
-                $scope.list = data;
-            });
+        new_app.controller('PersonalController', function($scope, ListFactory, $rootScope, UserFactory, $routeParams){
+            $scope.singleUser = {};
+            UserFactory.getOneUser($routeParams, function(data){
+                console.log('this is data!', data);
+                $scope.singleUser = data;
+                console.log('crazy', $scope.singleUser);
+            })
+        });
 
+        new_app.controller('ListController', function($scope, ListFactory, $rootScope, $routeParams){
+            $scope.list = []; 
+            ListFactory.getUserList($scope.user, function(data){
+                $scope.list = data;
+                // for(var i = 0; i < data.length; i++){
+                //     console.log(data[i]);
+                //     $scope.list.push({name: data[i].user, title: data[i].title});
+                // }
+                // console.log('data from listcontroller get',$scope.list);
+            });
+            $scope.new_note = {};
             $scope.newNote = function(){
-                $scope.newer_note = {title: $scope.new_note.title, description: $scope.new_note.desc, tagged: $scope.new_note.tagged, user: $rootScope.user.name, user_id: $rootScope.user._id};
-                console.log($scope.newer_note);
+                var user = $rootScope.root;
+                var userName = user[0].name;
+                var userId = user[0]._id;
+                $scope.newer_note = {title: $scope.new_note.title, description: $scope.new_note.description, tagged: $scope.new_note.tagged, user: userName, user_id: userId};
+                console.log('just filled this out',$scope.newer_note);
+                console.log('this is rootScope', userName);
                 ListFactory.addUserBucket($scope.newer_note, function(res){
                     $scope.userBuckets = res;
                     console.log('just added a new bucket', res);
                 });
             }
+            $scope.logout = function(){
+                console.log('someone logged out', $rootScope.root);
+                $rootScope.root = null;
+                console.log($rootScope.root);
+            }
         });
     </script>
 </head>
-<body>
-	<div id="mainDiv" ng-view=""></div>
+<body ng-controller="UserController">
+	<div id="mainDiv" ng-view="" ng-controller="ListController"></div>
 </body>
 </html>

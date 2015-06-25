@@ -1,7 +1,8 @@
-<div ng-controller="UserController">
+<div>
 	<h2>Bucket Lists</h2>
 	<form ng-submit="addUser()">
 		Name: <input type="text" ng-model="new_user.name"> <br>
 		<input type="submit" value="Enter">
 	</form>
+	{{ new_user.name }}
 </div>

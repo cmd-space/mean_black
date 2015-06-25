@@ -13,7 +13,7 @@ module.exports = (function(){
 			});
 		},
 		add: function(req, res){
-			var newBucket = new Bucket({title: req.body.title, description: req.body.desc, tagged: req.body.tagged, user: req.body.name, user_id: req.body.user_id});
+			var newBucket = new Bucket({title: req.body.title, description: req.body.description, tagged: req.body.tagged, user: req.body.name, user_id: req.body.user_id});
 			newBucket.save(function(err, results){
 				if(err){
 					console.log(err);
